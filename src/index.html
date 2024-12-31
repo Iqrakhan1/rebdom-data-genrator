@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./output.css" rel="stylesheet">
+</head>
+
+<body>
+    <header class="text-gray-600 body-font">
+        <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+            <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full"
+                    viewBox="0 0 24 24">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                <span class="ml-3 text-xl">Tailblocks</span>
+            </a>
+            <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
+                <a class="mr-5 hover:text-gray-900 md:d-none">Generate random data</a>
+            </nav>
+            <button id="GenrateData"
+                class="inline-flex items-center bg-purple-700 border-0 py-1 px-3 focus:outline-none hover:bg-purple-500 rounded text-base mt-4 text-white md:mt-0">Generate
+                now
+                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <div id="table" class="table border-2 mx-auto md:overflow-x-auto border-gray-950 m-4">
+        <table class="table-auto w-full p-6">
+            <thead>
+                <tr>
+                    <th class="border px-24 py-2">Name</th>
+                    <th class="border px-24 py-2">Language</th>
+                    <th class="border px-24 py-2">Salary</th>
+                    <th class="border px-24 py-2">City</th>
+                    <th class="border px-24 py-2">Manager</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let GenrateData = document.querySelector('#GenrateData');
+        let tableBody = document.querySelector('#table tbody');
+
+        GenrateData.addEventListener('click', async () => {
+            try {
+                let res = await fetch("http://localhost:3000/employee");
+                let data = await res.json();
+
+                tableBody.innerHTML = ''; // Clear previous data
+
+                data.forEach(employee => {
+                    let row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="border px-24 py-2">${employee.name}</td>
+                        <td class="border px-24 py-2">${employee.language}</td>
+                        <td class="border px-24 py-2">${employee.salary}</td>
+                        <td class="border px-24 py-2">${employee.city}</td>
+                        <td class="border px-24 py-2">${employee.isManager ? 'Yes' : 'No'}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+
+        });
+    </script>
+
+</body>
+
+</html>
